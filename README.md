@@ -1,6 +1,8 @@
 # roarm-ik-solver
-A Python library for the WaveShare Ro-arm m3 adding inverse kinematics functionality wrapping the roarmsdk.
 
-pip install git+https://github.com/YourUsername/My-RoArm-IK.git
+[![PyPI version](https://badge.fury.io/py/roarm-kinematics.svg)](https://badge.fury.io/py/roarm-kinematics)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A full 3D Spatial (XYZ) Inverse Kinematics engine for the Waveshare RoArm-M3 desktop robot arm.
 
 
