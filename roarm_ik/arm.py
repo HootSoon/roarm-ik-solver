@@ -13,13 +13,19 @@ class Arm(roarm):
         self.r2 = 7.5
         self.r3 = 7
 
-        self.pos = [0, 0, 0]
+        #Store X,Y,Z and Phi
+        self.pos = [0, 0, 0, 0]
         self.angles = [0, 0, 90, 0, 0, 10]
 
 
 
 
     def generate_ik(self, phi, x, y, z):
+        self.pos[0] = x
+        self.pos[1] = y
+        self.pos[2] = z
+        self.pos[3] = phi
+        
         phi_rad = math.radians(phi)
         base_angle_rad = math.atan2(y, x)
         R = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
