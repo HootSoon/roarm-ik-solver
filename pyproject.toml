@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "roarm-ik"
-version = "0.1.0"
+version = "1.0.0"
 authors = [
-    { name = "Your Name", email = "your.email@example.com" }
+    { name = "Hudson Reeves", email = "hreeve01@uafs.edu" }
 ]
 description = "A Python library for the WaveShare Ro-arm m3 adding inverse kinematics functionality wrapping the roarmsdk"
 readme = "README.md"
