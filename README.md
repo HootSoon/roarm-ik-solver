@@ -5,4 +5,4 @@
 
 A full 3D Spatial (XYZ) Inverse Kinematics engine for the Waveshare RoArm-M3 desktop robot arm.
 
-
+To install simply use : pip install roarm-ik
