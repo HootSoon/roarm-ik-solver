@@ -1,8 +1,8 @@
-from roarm_ik import Arm
+from roarm_ik.arm import m3Arm
 
 def main():
     print("Connecting to RoArm-M3...")
-    arm = Arm(port="/dev/ttyUSB0")
+    arm = m3Arm(port="/dev/ttyUSB0")
 
     print("Moving to start of square...")
     # Move to the bottom-left corner of the square before drawing
