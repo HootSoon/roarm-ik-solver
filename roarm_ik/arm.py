@@ -66,7 +66,7 @@ class m3Arm(roarm):
     def wait_for_arrival(self, target_angles, tolerance=2.0, timeout=3.0):
         start_time = time.time()
         while time.time() - start_time < timeout:
-            current_angles = self.get_joints_angle()
+            current_angles = self.joints_angle_get()
             if current_angles is not None and len(current_angles) >= 4:
                 max_diff = max(abs(current_angles[i] - target_angles[i]) for i in range(4))
                 if max_diff <= tolerance:
@@ -144,7 +144,7 @@ class m2Arm(roarm):
     def wait_for_arrival(self, target_angles, tolerance=2.0, timeout=3.0):
         start_time = time.time()
         while time.time() - start_time < timeout:
-            current_angles = self.get_joints_angle()
+            current_angles = self.joints_angle_get()
             if current_angles is not None and len(current_angles) >= 3:
                 max_diff = max(abs(current_angles[i] - target_angles[i]) for i in range(3))
                 if max_diff <= tolerance:
