@@ -2,7 +2,7 @@ from roarm_ik.arm import m2Arm
 import time
 
 def main():
-    arm = m2Arm()
+    arm = m2Arm(port = "/dev/ttyUSB0") # change port to match arms com.
     arm.move_init()
     time.sleep(1)
     # Changes the X,Y,Z coordinate to match intended location
