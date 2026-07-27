@@ -38,15 +38,18 @@ class m3Arm(roarm):
 
         d = math.sqrt(math.pow(D2x, 2) + math.pow(D2y, 2))
 
-        if d > (self.r1 + self.r2):
+        if d == 0 or d > (self.r1 + self.r2):
             return None
 
         a = math.atan2(D2y, D2x)
-        b = math.acos((math.pow(self.r1, 2) + math.pow(d, 2) - math.pow(self.r2, 2)) / (2 * self.r1 * d))
+        
+        cos_b = (math.pow(self.r1, 2) + math.pow(d, 2) - math.pow(self.r2, 2)) / (2 * self.r1 * d)
+        b = math.acos(max(-1.0, min(1.0, cos_b)))
         
         math_theta1 = a + b
 
-        inner_elbow = math.acos((math.pow(self.r1, 2) + math.pow(self.r2, 2) - math.pow(d, 2)) / (2 * self.r1 * self.r2))
+        cos_elbow = (math.pow(self.r1, 2) + math.pow(self.r2, 2) - math.pow(d, 2)) / (2 * self.r1 * self.r2)
+        inner_elbow = math.acos(max(-1.0, min(1.0, cos_elbow)))
         math_theta2 = math.pi - inner_elbow 
 
         robot_shoulder = (math.pi / 2) - math_theta1
@@ -62,17 +65,18 @@ class m3Arm(roarm):
 
 
 
-
     def wait_for_arrival(self, target_angles, tolerance=2.0, timeout=3.0):
         start_time = time.time()
         while time.time() - start_time < timeout:
-            current_angles = self.joints_angle_get()
-            if current_angles is not None and len(current_angles) >= 4:
-                max_diff = max(abs(current_angles[i] - target_angles[i]) for i in range(4))
-                if max_diff <= tolerance:
-                    break
+            try:
+                current_angles = self.joints_angle_get()
+                if current_angles is not None and len(current_angles) >= 4:
+                    max_diff = max(abs(current_angles[i] - target_angles[i]) for i in range(4))
+                    if max_diff <= tolerance:
+                        break
+            except TypeError:
+                pass
             time.sleep(0.05)
-
 
 
     def move_to_xyz(self, phi, x, y, z, wait=True):
@@ -85,6 +89,7 @@ class m3Arm(roarm):
 
 
     def draw_line(self, phi, x1, y1, z1, x2, y2, z2, steps=30):
+        last_valid_angles = None
         for i in range(steps + 1):
             t = i / steps
             cx = x1 + (x2 - x1) * t
@@ -93,11 +98,11 @@ class m3Arm(roarm):
             angles = self.generate_ik(phi, cx, cy, cz)
             if angles:
                 self.joints_angle_ctrl(angles, 800, 254)
+                last_valid_angles = angles
             time.sleep(0.05)
         
-
-        if angles:
-            self.wait_for_arrival(angles)
+        if last_valid_angles:
+            self.wait_for_arrival(last_valid_angles)
 
 
 class m2Arm(roarm):
@@ -120,15 +125,18 @@ class m2Arm(roarm):
 
         d = math.sqrt(math.pow(R, 2) + math.pow(z, 2))
 
-        if d > (self.r1 + self.r2):
+        if d == 0 or d > (self.r1 + self.r2):
             return None
 
         a = math.atan2(z, R)
-        b = math.acos((math.pow(self.r1, 2) + math.pow(d, 2) - math.pow(self.r2, 2)) / (2 * self.r1 * d))
+        
+        cos_b = (math.pow(self.r1, 2) + math.pow(d, 2) - math.pow(self.r2, 2)) / (2 * self.r1 * d)
+        b = math.acos(max(-1.0, min(1.0, cos_b)))
         
         math_theta1 = a + b
 
-        inner_elbow = math.acos((math.pow(self.r1, 2) + math.pow(self.r2, 2) - math.pow(d, 2)) / (2 * self.r1 * self.r2))
+        cos_elbow = (math.pow(self.r1, 2) + math.pow(self.r2, 2) - math.pow(d, 2)) / (2 * self.r1 * self.r2)
+        inner_elbow = math.acos(max(-1.0, min(1.0, cos_elbow)))
         math_theta2 = math.pi - inner_elbow 
 
         robot_shoulder = (math.pi / 2) - math_theta1
@@ -144,11 +152,14 @@ class m2Arm(roarm):
     def wait_for_arrival(self, target_angles, tolerance=2.0, timeout=3.0):
         start_time = time.time()
         while time.time() - start_time < timeout:
-            current_angles = self.joints_angle_get()
-            if current_angles is not None and len(current_angles) >= 3:
-                max_diff = max(abs(current_angles[i] - target_angles[i]) for i in range(3))
-                if max_diff <= tolerance:
-                    break
+            try:
+                current_angles = self.joints_angle_get()
+                if current_angles is not None and len(current_angles) >= 3:
+                    max_diff = max(abs(current_angles[i] - target_angles[i]) for i in range(3))
+                    if max_diff <= tolerance:
+                        break
+            except TypeError:
+                pass
             time.sleep(0.05)
 
 
@@ -161,6 +172,7 @@ class m2Arm(roarm):
 
 
     def draw_line(self, x1, y1, z1, x2, y2, z2, steps=30):
+        last_valid_angles = None
         for i in range(steps + 1):
             t = i / steps
             cx = x1 + (x2 - x1) * t
@@ -169,7 +181,8 @@ class m2Arm(roarm):
             angles = self.generate_ik(cx, cy, cz)
             if angles:
                 self.joints_angle_ctrl(angles, 800, 254)
+                last_valid_angles = angles
             time.sleep(0.05)
         
-        if angles:
-            self.wait_for_arrival(angles)
+        if last_valid_angles:
+            self.wait_for_arrival(last_valid_angles)
